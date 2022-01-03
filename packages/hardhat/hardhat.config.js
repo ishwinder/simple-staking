@@ -637,7 +637,7 @@ task("stake", "Deposits the rewards into the contract")
     wallet = wallet.connect(provider);
 
     const rewardsContract = new ethers.Contract(
-      "0x51b6B0420D36E997b883C4d4682565200874d8e3",
+      "0x964064Ee15BAbA0D00D9Eae4D5e22aD38d384827",
       abi,
       wallet
     );
@@ -659,7 +659,7 @@ task("depositRewards", "Deposits the rewards into the contract")
     wallet = wallet.connect(provider);
 
     const rewardsContract = new ethers.Contract(
-      "0x51b6B0420D36E997b883C4d4682565200874d8e3",
+      "0x964064Ee15BAbA0D00D9Eae4D5e22aD38d384827",
       abi,
       wallet
     );
@@ -670,3 +670,23 @@ task("depositRewards", "Deposits the rewards into the contract")
       `Transaction sent on blockchain: https://ropsten.etherscan.io/tx/${tx.hash}`
     );
   });
+
+task("totalStaked", "Total Eth Staked into the contract").setAction(
+  async (taskArgs, { ethers }) => {
+    const provider = new ethers.providers.JsonRpcProvider(
+      config.networks[defaultNetwork].url
+    );
+    let wallet = ethers.Wallet.fromMnemonic(mnemonic());
+    wallet = wallet.connect(provider);
+
+    const rewardsContract = new ethers.Contract(
+      "0x964064Ee15BAbA0D00D9Eae4D5e22aD38d384827",
+      abi,
+      wallet
+    );
+    const stakedEth = ethers.utils.formatEther(
+      await rewardsContract.totalStaked()
+    );
+    console.log("Total staked eth", stakedEth);
+  }
+);
